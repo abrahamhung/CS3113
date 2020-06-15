@@ -38,7 +38,6 @@ void Initialize() {
 	program.Load("shaders/vertex.glsl", "shaders/fragment.glsl");
 
 	viewMatrix = glm::mat4(1.0f);
-	modelMatrix = glm::mat4(1.0f);
 	projectionMatrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
 
 	program.SetProjectionMatrix(projectionMatrix);
@@ -53,7 +52,7 @@ void Initialize() {
 	bpos = glm::vec3(0.0f, 0.0f, 0.0f);
 	ldir = glm::vec3(0.0f, 0.0f, 0.0f);
 	rdir = glm::vec3(0.0f, 0.0f, 0.0f);
-	bdir = glm::vec3(0.0f, 0.0f, 0.0f);
+	bdir = glm::vec3(1.0f, .5f, 0.0f);
 	lmatrix = glm::mat4(1.0f);
 	rmatrix = glm::mat4(1.0f);
 	bmatrix = glm::mat4(1.0f);
@@ -86,41 +85,51 @@ void ProcessInput() {
 	
 }
 
+float lastTicks = 0;
 void Update() {
-	lmatrix = glm::mat4(1.0f);
-	rmatrix = glm::mat4(1.0f);
-	bmatrix = glm::mat4(1.0f);
+	float ticks = (float)SDL_GetTicks() / 1000.0f;
+	float deltaTime = ticks - lastTicks;
+	lastTicks = ticks;
 
-	if (bpos.y < -3) {
-		bdir.y = 0 - bdir.y;
-	}
-	else if (bpos.y > 3) {
-		bdir.y = 0 - bdir.y;
-	}
 
-	if (bpos.x < -4) {
-		if (bpos.y < (lpos.y + .5) && bpos.y >(lpos.y - .5)) {
-			bdir.x = 0 - bdir.x;
+	if (gamestate == 0) {
+		lmatrix = glm::mat4(1.0f);
+		rmatrix = glm::mat4(1.0f);
+		bmatrix = glm::mat4(1.0f);
+
+		if (bpos.y < -3) {
+			bdir.y = 0 - bdir.y;
 		}
-		else {
-			gamestate = 2;
+		else if (bpos.y > 3) {
+			bdir.y = 0 - bdir.y;
 		}
+
+		if (bpos.x < -4) {
+			if (bpos.y < (lpos.y + .5) && bpos.y >(lpos.y - .5)) {
+				bdir.x = 0 - bdir.x;
+			}
+			else {
+				gamestate = 2;
+			}
+		}
+		if (bpos.x > 4) {
+			if (bpos.y < (rpos.y + .5) && bpos.y >(rpos.y - .5)) {
+				bdir.x = 0 - bdir.x;
+			}
+			else {
+				gamestate = 1;
+			}
+		}
+
+		bpos += bdir * deltaTime;
+
+		lpos += ldir * deltaTime;
+		rpos += rdir * deltaTime;
+
+		lmatrix = glm::translate(lmatrix, lpos);
+		rmatrix = glm::translate(rmatrix, rpos);
+		bmatrix = glm::translate(bmatrix, bpos);
 	}
-	if (bpos.x > 4) {
-		if (bpos.y < (rpos.y + .5) && bpos.y >(rpos.y - .5)) {
-			bdir.x = 0 - bdir.x;
-		}
-		else {
-			gamestate = 1;
-		}
-	}
-
-	bpos += bdir;
-
-	lmatrix = glm::translate(lmatrix, lpos);
-	rmatrix = glm::translate(rmatrix, rpos);
-	bmatrix = glm::translate(bmatrix, bpos);
-
 }
 
 void Render() {
@@ -129,19 +138,29 @@ void Render() {
 	
 
 	float vertices[] = { 0.5f, -0.5f, 0.0f, 0.5f, -0.5f, -0.5f };
+	float vertices2[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
+
 	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
 	glEnableVertexAttribArray(program.positionAttribute);
 
 	program.SetModelMatrix(bmatrix);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
+	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices2);
+
+	program.SetModelMatrix(lmatrix);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	program.SetModelMatrix(rmatrix);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	
 	glDisableVertexAttribArray(program.positionAttribute);
 
 
-	if (gamestate = 1) {
+	if (gamestate == 1) {
 		//win left player
 	}
-	if (gamestate = 2) {
+	if (gamestate == 2) {
 		//win right player
 	}
 
@@ -160,6 +179,7 @@ int main(int argc, char* argv[]) {
 		ProcessInput();
 		Update();
 		Render();
+		SDL_Delay(50);
 	}
 
 	Shutdown();
