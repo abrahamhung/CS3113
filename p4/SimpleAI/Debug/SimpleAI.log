@@ -1,0 +1,3 @@
+﻿  main.cpp
+C:\Users\storm\source\repos\SimpleAI\SimpleAI\main.cpp(95,32): warning C4244: '=': conversion from 'GLuint64' to 'GLuint', possible loss of data
+  SimpleAI.vcxproj -> C:\Users\storm\source\repos\SimpleAI\Debug\SimpleAI.exe
