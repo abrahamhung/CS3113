@@ -47,7 +47,7 @@ public:
 	void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);
 	bool collide(Entity& other);
 
-	void ai(Entity *player);
+	void ai(glm::vec3 playerposition);
 	aitype type = aitype{ potato };
 	aistate status = aistate{ idle };
 };

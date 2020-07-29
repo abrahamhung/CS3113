@@ -36,13 +36,17 @@ bool Entity::collide(Entity& other) {
 	return false;
 }
 
-void Entity::ai(Entity* player){
-	OutputDebugString("ai running");
-	switch (type) {
+void Entity::ai(glm::vec3 playerposition){
+		std::string s = std::to_string(playerposition.x);
+			
+	switch(type){
 		case jumper:
-			OutputDebugString("jumpting");
-			if (fabs(position.x - player->position.x) < .5) {
+			OutputDebugString(s.c_str());
+			if (fabs(position.x - playerposition.x) < .5) {
 				velocity.y = 3;
+			}
+			else {
+				velocity.y = 0;
 			}
 	}
 }

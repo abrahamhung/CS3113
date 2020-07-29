@@ -51,6 +51,8 @@ struct level {
 };
 void loadLevel(level map);
 
+int lives = 3;
+
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
 ShaderProgram program;
@@ -220,10 +222,13 @@ void ProcessInput() {
 		if (state.levelOver) {
 			state.currentLevel += 1;
 			state.levelOver = false;
+			loadLevel(state.levels[state.currentLevel]);
 		}
 		else {
+			if (!state.player->active) {
+				lives -= 1;
+			}
 			loadLevel(state.levels[state.currentLevel]);
-			state.player->active = true;
 		}
 	}
 
@@ -262,7 +267,7 @@ void Update() {
 		deltaTime -= TIMESTEP;
 		state.player->Update(TIMESTEP);
 		for (int i = 0; i < state.levels[state.currentLevel].enemycount; i++) {
-			state.enemies[i].ai(state.player);
+			state.enemies[i].ai(state.player->position);
 			state.enemies[i].Update(TIMESTEP);
 		}
 	}
@@ -273,10 +278,12 @@ void Update() {
 	}
 
 
+	//invert player position
 	glm::vec3 offset = glm::vec3(0);
 	offset.x = -state.player->position.x;
 	offset.y = -state.player->position.y;
 
+	//offset drawing of all items to keep character centered
 	for (int i = 0; i < state.levels[state.currentLevel].enemycount; i++) {
 		state.enemies[i].Update(0);
 		state.enemies[i].modelMatrix = glm::translate(state.enemies[i].modelMatrix, offset);
@@ -299,8 +306,14 @@ void Update() {
 void Render() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	
+	std::string s = "lives: " + std::to_string(lives);
+	//failed
+	if (lives <= 0) {
+		printr->print(&program, "you loser!", -4, 2);
+		printr->print(&program, s, -4, 3);
+	}
 	//out of levels
-	if (state.currentLevel == state.numLevels && state.levelOver) {
+	else if (state.currentLevel == state.numLevels && state.levelOver) {
 	printr->printBound(&program, "You're Win!", -4, 1, 4);
 	}
 	//level has ended
@@ -311,12 +324,14 @@ void Render() {
 								
 	}
 	//player is dead
-	else if (!state.player->active) {	
+	else if (!state.player->active) {
 		printr->print(&program, "press enter", -4, 2);
 		printr->print(&program, "to restart", -4, 1);
+		printr->print(&program, s, -4, 3);
 	}
 	//draw level
 	else {
+		printr->print(&program, s, -4, 3);
 		//draw tiles
 		for (int i = 0; i < state.levels[state.currentLevel].tilecount; i++) {
 			state.tiles[i].Render(&program);
@@ -399,6 +414,7 @@ void loadLevel(level map) {
 		for (int i = 0; i < map.enemycount; i++) {
 			state.enemies[i].textureID = map.enemyTextures;
 			state.enemies[i].position = map.enemyxy[i];
+			state.enemies[i].type = map.enemies[i];
 			state.enemies[i].active = true;
 			state.enemies[i].animIndices = NULL;
 			state.enemies[i].Update(0);
