@@ -149,6 +149,7 @@
     <Image Include="triangleAtlas.png" />
   </ItemGroup>
   <ItemGroup>
+    <Media Include="Kevin_MacLeod_-_Monkeys_Spinning_Monkeys.mp3" />
     <Media Include="VCDOST7P2810.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

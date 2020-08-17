@@ -75,5 +75,8 @@
     <Media Include="VCDOST7P2810.mp3">
       <Filter>Resource Files</Filter>
     </Media>
+    <Media Include="Kevin_MacLeod_-_Monkeys_Spinning_Monkeys.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

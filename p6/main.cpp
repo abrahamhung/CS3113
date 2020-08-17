@@ -25,6 +25,7 @@
 #include<string>
 
 Mix_Music* music;
+Mix_Chunk* boop;
 Printer* printr;
 
 struct level;
@@ -61,6 +62,13 @@ GLuint LoadTexture(const char* filePath);
 void Initialize() {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 	//SDL_Init(SDL_INIT_VIDEO);
+
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+	music = Mix_LoadMUS("Kevin_MacLeod_-_Monkeys_Spinning_Monkeys.mp3");
+	//Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
+	Mix_PlayMusic(music, -1);
+
+
 	displayWindow = SDL_CreateWindow("Floaty Rocks", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
 	SDL_GL_MakeCurrent(displayWindow, context);
@@ -86,11 +94,6 @@ void Initialize() {
 	glEnable(GL_BLEND);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
-	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
-	music = Mix_LoadMUS("VCDOST7P2810.mp3");
-	Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
-	Mix_PlayMusic(music, -1);
 
 
 	// Initialize Game Objects
