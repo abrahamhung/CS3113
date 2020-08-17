@@ -48,7 +48,7 @@ struct level {
 };
 void loadLevel(level map);
 
-int lives = 3;
+int lives = 1;
 
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
@@ -87,8 +87,9 @@ void Initialize() {
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 	music = Mix_LoadMUS("VCDOST7P2810.mp3");
-	Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
 	Mix_PlayMusic(music, -1);
 
 
@@ -128,9 +129,9 @@ void Initialize() {
 	newLevel->height = 30;
 	newLevel->map = new int[900]{
 		3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
-		3,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
+		3,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,	//5
 		3,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
@@ -146,13 +147,13 @@ void Initialize() {
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
-		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,	//20
-		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
-		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
+		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,0,0,0,3,	//20
+		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0,0,0,0,3,
+		3,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,3,	//25
-		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
+		3,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
 		3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
@@ -268,12 +269,13 @@ void Update() {
 	}
 
 
+	state.player->Update(0);
 	//cenemy collision
 	state.player->tcoll = state.player->bcoll = state.player->lcoll = state.player->rcoll = false;
 	state.player->collide(state.enemies);
 
 	if (state.player->tcoll || state.player->lcoll || state.player->rcoll || state.player->lcoll) {
-		//state.player->active = false;
+		state.player->active = false;
 	}
 
 
@@ -398,6 +400,15 @@ GLuint LoadTexture(const char* filePath) {
 }
 
 void loadLevel(level map) {
+
+	for (int i = 0; i < state.enemies.size(); i++) {
+		free(state.enemies[i]);
+	}
+	state.enemies.clear();
+	for (int i = 0; i < state.tiles.size(); i++) {
+		free(state.tiles[i]);
+	}
+	state.tiles.clear();
 	std::string s = "loading " + std::to_string(state.currentLevel);
 	OutputDebugString(s.c_str());
 	//start loading map from (0,0) - this means that everything will be offset
@@ -418,7 +429,7 @@ void loadLevel(level map) {
 				state.tiles[state.tiles.size() - 1]->Update(0);
 			}
 			else if (object == 4) {
-				state.enemies.push_back(new Enemy(glm::vec3(j, -i, 0)));
+				state.enemies.push_back(new Entity(glm::vec3(j, -i, 0)));
 				state.enemies[state.enemies.size() - 1]->textureID = state.enemytexture;
 				state.enemies[state.enemies.size() - 1]->Update(0);
 			}
@@ -432,6 +443,7 @@ void loadLevel(level map) {
 	+"\n" ;
 	OutputDebugString(b.c_str());
 
+	state.player->velocity = glm::vec3(0);
 	state.player->Update(0);
 	state.player->active;
 	state.levelOver = false;

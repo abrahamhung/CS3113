@@ -1,6 +1,6 @@
-﻿  Entity.cpp
-  main.cpp
-C:\Users\storm\source\repos\asteroiders\asteroiders\main.cpp(192,27): warning C4018: '>=': signed/unsigned mismatch
-C:\Users\storm\source\repos\asteroiders\asteroiders\main.cpp(199,31): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
+﻿  main.cpp
+C:\Users\storm\source\repos\asteroiders\asteroiders\main.cpp(193,27): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\storm\source\repos\asteroiders\asteroiders\main.cpp(200,31): warning C4018: '<': signed/unsigned mismatch
+C:\Users\storm\source\repos\asteroiders\asteroiders\main.cpp(404,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\storm\source\repos\asteroiders\asteroiders\main.cpp(408,20): warning C4018: '<': signed/unsigned mismatch
   asteroiders.vcxproj -> C:\Users\storm\source\repos\asteroiders\Debug\asteroiders.exe

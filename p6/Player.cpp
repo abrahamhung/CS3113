@@ -60,6 +60,10 @@ void Player::Update(float deltaTime)
 
 	modelMatrix = glm::rotate(modelMatrix, glm::radians(direction), glm::vec3(0, 0, 1.0f));
 
+	tcoll = false;
+	bcoll = false;
+	rcoll = false;
+	lcoll = false;
 }
 
 void Player::collide(Entity* entitylist, int number) {

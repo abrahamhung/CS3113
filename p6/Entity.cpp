@@ -39,8 +39,6 @@ bool Entity::collide(Entity& other) {
 }
 
 void Entity::ai(Entity* player){
-			
-
 			if (fabs(position.x - player->position.x) < .5) {
 				velocity.y = 3;
 			}
