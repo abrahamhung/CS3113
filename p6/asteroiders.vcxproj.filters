@@ -78,5 +78,8 @@
     <Media Include="Kevin_MacLeod_-_Monkeys_Spinning_Monkeys.mp3">
       <Filter>Resource Files</Filter>
     </Media>
+    <Media Include="146726__leszek-szary__jumping.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

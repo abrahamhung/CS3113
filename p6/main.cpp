@@ -25,7 +25,7 @@
 #include<string>
 
 Mix_Music* music;
-Mix_Chunk* boop;
+Mix_Chunk* bounce;
 Printer* printr;
 
 struct level;
@@ -64,9 +64,12 @@ void Initialize() {
 	//SDL_Init(SDL_INIT_VIDEO);
 
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
-	music = Mix_LoadMUS("Kevin_MacLeod_-_Monkeys_Spinning_Monkeys.mp3");
+	music = Mix_LoadMUS("VCDOST7P2810.mp3");
 	//Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
 	Mix_PlayMusic(music, -1);
+
+	bounce = Mix_LoadWAV("146726__leszek-szary__jumping.wav");
+	
 
 
 	displayWindow = SDL_CreateWindow("Floaty Rocks", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
@@ -269,6 +272,7 @@ void Update() {
 
 	if (state.player->tcoll || state.player->bcoll || state.player->rcoll || state.player->lcoll) {
 		//state.player->active = false;
+		Mix_PlayChannel(-1, bounce, 0);
 	}
 
 
